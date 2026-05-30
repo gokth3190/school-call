@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>교무실 호출 대시보드 (선생님용)</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Malgun Gothic', sans-serif; }
+        body { background-color: #f5f6fa; padding: 30px; }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #dcdde1; }
+        h1 { color: #2f3640; font-size: 28px; }
+        .stats { font-size: 16px; color: #7f8c8d; font-weight: bold; }
+        
+        /* 호출 카드 리스트 스타일 */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-left: 6px solid #5563de; transition: transform 0.2s; position: relative; }
+        .card:hover { transform: translateY(-3px); }
+        .card.done { border-left-color: #4cd137; opacity: 0.6; }
+        
+        .card-header { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .student-tag { background: #e1b12c; color: white; padding: 3px 8px; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .time-tag { color: #7f8c8d; font-size: 12px; }
+        
+        .student-name { font-size: 18px; font-weight: bold; color: #2f3640; margin-bottom: 8px; }
+        .target-teacher { color: #5563de; font-weight: bold; font-size: 14px; margin-bottom: 10px; padding: 4px 0; border-bottom: 1px dashed #eee; }
+        .reason-text { font-size: 14px; color: #353b48; line-height: 1.5; background: #f8f9fa; padding: 10px; border-radius: 6px; margin-bottom: 15px; min-height: 50px; }
+        
+        .btn-complete { width: 100%; padding: 10px; background-color: #4cd137; border: none; border-radius: 6px; color: white; font-weight: bold; cursor: pointer; font-size: 14px; transition: background 0.2s; }
+        .btn-complete:hover { background-color: #44bd32; }
+        
+        .no-data { text-align: center; grid-column: 1 / -1; color: #7f8c8d; font-size: 18px; padding: 100px 0; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🔔 교무실 호출 실시간 대시보드</h1>
+    <div class="stats" id="currentCount">대기 중인 학생: 0명</div>
+</header>
+
+<div class="grid" id="callContainer">
+    <div class="no-data">현재 대기 중인 호출이 없습니다.</div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, onValue, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+    // ⚠️ [필수 변경] 본인의 Firebase 프로젝트 설정값으로 반드시 채워주세요! (index.html과 동일한 값)
+    const firebaseConfig = {
+        apiKey: "AIzaSyAp6SY-nfj-epgvcc3QAHLlzAVBDx9hE6U",
+  authDomain: "vibecoding-project-3ad00.firebaseapp.com",
+  databaseURL: "https://vibecoding-project-3ad00-default-rtdb.firebaseio.com",
+  projectId: "vibecoding-project-3ad00",
+  storageBucket: "vibecoding-project-3ad00.firebasestorage.app",
+  messagingSenderId: "836454758922",
+  appId: "1:836454758922:web:98680d3f1c654bb3fd7df3",
+  measurementId: "G-7ZW3KFHDS8"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    const callContainer = document.getElementById('callContainer');
+    const currentCount = document.getElementById('currentCount');
+
+    // Firebase 데이터베이스의 'calls' 경로를 실시간으로 감시(Listening)
+    const callsRef = ref(database, 'calls');
+    
+    onValue(callsRef, (snapshot) => {
+        callContainer.innerHTML = ''; // 화면 초기화
+        const data = snapshot.val();
+        
+        if (!data) {
+            callContainer.innerHTML = '<div class="no-data">현재 대기 중인 호출이 없습니다. 😊</div>';
+            currentCount.textContent = '대기 중인 학생: 0명';
+            return;
+        }
+
+        // 객체 형태의 데이터를 배열로 바꾸어 처리
+        const callIds = Object.keys(data);
+        let waitingCount = 0;
+
+        callIds.forEach((id) => {
+            const call = data[id];
+            
+            // "대기" 상태인 호출만 화면에 표시
+            if (call.status === "대기") {
+                waitingCount++;
+
+                // 카드 HTML 구조 동적 생성
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span class="student-tag">${call.studentInfo}</span>
+                        <span class="time-tag">${call.timestamp.split(' ')[4] || call.timestamp}</span>
+                    </div>
+                    <div class="student-name">${call.studentName} 학생</div>
+                    <div class="target-teacher">📍 목적지: ${call.officeLocation}<br>🙋‍♂️ 호출: ${call.teacherName}</div>
+                    <div class="reason-text">${call.reason}</div>
+                    <button class="btn-complete" data-id="${id}">처리 완료</button>
+                `;
+                
+                callContainer.appendChild(card);
+            }
+        });
+
+        // 상단 카운트 업데이트
+        currentCount.textContent = `대기 중인 학생: ${waitingCount}명`;
+
+        if (waitingCount === 0) {
+            callContainer.innerHTML = '<div class="no-data">현재 대기 중인 호출이 없습니다. 😊</div>';
+        }
+
+        // [처리 완료] 버튼 클릭 이벤트 바인딩
+        const completeButtons = document.querySelectorAll('.btn-complete');
+        completeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const callId = this.getAttribute('data-id');
+                
+                // 💡 원래는 구글 시트에 데이터를 먼저 보내는 코드가 여기 들어가야 합니다 (3단계 연동 시 추가).
+                // 지금은 우선 Firebase에서 즉시 삭제하여 목록에서 지우는 기능만 구현했습니다.
+                const singleCallRef = ref(database, `calls/${callId}`);
+                remove(singleCallRef)
+                .then(() => {
+                    alert('처리가 완료되어 목록에서 제외되었습니다.');
+                })
+                .catch((error) => {
+                    alert('오류 발생: ' + error.message);
+                });
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
