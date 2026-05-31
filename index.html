@@ -2,65 +2,65 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>교무실 호출 시스템 (학생용)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>교무실 호출 시스템</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Malgun Gothic', sans-serif; }
-        body { background: linear-gradient(135deg, #74abe2, #5563de); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
-        .container { background: #ffffff; width: 100%; max-width: 480px; padding: 30px; border-radius: 16px; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
-        h2 { text-align: center; color: #2c3e50; margin-bottom: 6px; font-size: 24px; }
-        .subtitle { text-align: center; color: #7f8c8d; font-size: 14px; margin-bottom: 25px; }
-        .form-group { margin-bottom: 18px; }
-        label { display: block; margin-bottom: 6px; font-weight: bold; color: #34495e; font-size: 14px; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #dcdde1; border-radius: 8px; font-size: 15px; transition: all 0.3s; }
-        textarea { resize: none; height: 90px; }
-        input:focus, select:focus, textarea:focus { border-color: #5563de; outline: none; box-shadow: 0 0 8px rgba(85, 99, 222, 0.2); }
-        button { width: 100%; padding: 14px; background: linear-gradient(135deg, #5563de, #4a54df); border: none; border-radius: 8px; color: white; font-size: 16px; font-weight: bold; cursor: pointer; transition: opacity 0.2s; margin-top: 10px; }
-        button:hover { opacity: 0.9; }
+        body { background: linear-gradient(135deg, #74b9ff, #0984e3); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .form-container { background: white; border-radius: 16px; padding: 35px 25px; width: 100%; max-width: 550px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        h2 { text-align: center; color: #2d3436; font-size: 26px; margin-bottom: 25px; font-weight: bold; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; color: #2d3436; margin-bottom: 8px; font-size: 15px; }
+        input[type="text"], select, textarea { width: 100%; padding: 14px; border: 1px solid #b2bec3; border-radius: 8px; font-size: 16px; color: #2d3436; background-color: #fff; outline: none; transition: border-color 0.2s; }
+        input:focus, select:focus, textarea:focus { border-color: #0984e3; box-shadow: 0 0 0 3px rgba(9, 132, 227, 0.1); }
+        textarea { resize: none; height: 100px; }
+        .btn-submit { width: 100%; padding: 16px; background-color: #0984e3; border: none; border-radius: 8px; color: white; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
+        .btn-submit:hover { background-color: #0773c5; }
+        select:disabled { background-color: #dfe6e9; color: #b2bec3; cursor: not-allowed; }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="form-container">
     <h2>교무실 호출 시스템</h2>
-    <p class="subtitle">스카이라운지 및 복도 전용 호출 패널</p>
     
     <form id="callForm">
         <div class="form-group">
-            <label for="studentInfo">학년 / 반 / 번호</label>
+            <label>학년 / 반 / 번호</label>
             <input type="text" id="studentInfo" placeholder="예: 3학년 2반 15번" required>
         </div>
+        
         <div class="form-group">
-            <label for="studentName">학생 이름</label>
+            <label>학생 이름</label>
             <input type="text" id="studentName" placeholder="홍길동" required>
         </div>
         
         <div class="form-group">
-            <label for="officeLocation">교무실 위치</label>
+            <label>교무실 위치</label>
             <select id="officeLocation" required>
                 <option value="">-- 교무실 위치를 선택하세요 --</option>
                 <option value="1학년 교무실 (본관 3층)">1학년 교무실 (본관 3층)</option>
                 <option value="2학년 교무실 (본관 2층)">2학년 교무실 (본관 2층)</option>
                 <option value="3학년 교무실 (동국관 4층)">3학년 교무실 (동국관 4층)</option>
                 <option value="본교무실 (본관 1층)">본교무실 (본관 1층)</option>
-                <option value="학생부실 (동국관 2층)">학생부실 (동국관 2층)</option>
+                <option value="학생안전부실 (동국관 2층)">학생안전부실 (동국관 2층)</option>
                 <option value="기타 특별실 (상담/진로/보건 등)">기타 특별실 (상담/진로/보건 등)</option>
             </select>
         </div>
-
+        
         <div class="form-group">
-            <label for="teacherName">호출할 선생님</label>
-            <select id="teacherName" required disabled>
+            <label>호출할 선생님</label>
+            <select id="teacherName" disabled required>
                 <option value="">-- 교무실을 먼저 선택하세요 --</option>
             </select>
         </div>
-
+        
         <div class="form-group">
-            <label for="reason">호출 사유</label>
+            <label>호출 사유</label>
             <textarea id="reason" placeholder="예: 수행평가 질문이 있습니다, 유인물 제출 등" required></textarea>
         </div>
-
-        <button type="submit">선생님 호출하기</button>
+        
+        <button type="submit" class="btn-submit">선생님 호출하기</button>
     </form>
 </div>
 
@@ -68,29 +68,17 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-    // ⚠️ [필수] 태훈님의 진짜 Firebase 설정값(Key)을 아래에 붙여넣어 주세요!
-    const firebaseConfig = {
-         apiKey: "AIzaSyAp6SY-nfj-epgvcc3QAHLlzAVBDx9hE6U",
-  authDomain: "vibecoding-project-3ad00.firebaseapp.com",
-  databaseURL: "https://vibecoding-project-3ad00-default-rtdb.firebaseio.com",
-  projectId: "vibecoding-project-3ad00",
-  storageBucket: "vibecoding-project-3ad00.firebasestorage.app",
-  messagingSenderId: "836454758922",
-  appId: "1:836454758922:web:98680d3f1c654bb3fd7df3",
-  measurementId: "G-7ZW3KFHDS8"
-    };
+    const firebaseConfig = { apiKey: "AIzaSyAp6SY-nfj-epgvcc3QAHLlzAVBDx9hE6U", authDomain: "vibecoding-project-3ad00.firebaseapp.com", databaseURL: "https://vibecoding-project-3ad00-default-rtdb.firebaseio.com", projectId: "vibecoding-project-3ad00", storageBucket: "vibecoding-project-3ad00.firebasestorage.app", messagingSenderId: "836454758922", appId: "1:836454758922:web:98680d3f1c654bb3fd7df3", measurementId: "G-7ZW3KFHDS8" };
+    const app = initializeApp(firebaseConfig); const database = getDatabase(app);
 
-    const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
-
-    // 교무실 이름 일치 오류 원천 차단 완료
+    // 각 교무실별 선생님 명단 (필요시 교사 성함을 학교에 맞게 수정하여 사용하세요)
     const teachersByOffice = {
-        "1학년 교무실 (본관 3층)": ["전진호 선생님 (국어)", "홍선희 선생님 (통합사회)", "서정숙 선생님 (통합과학)", "이재영 선생님 (수학)", "안병근 선생님 (역사)", "서신애 선생님 (수학)", "손유민 선생님 (영어)", "고혜숙 선생님 (과학)", "신지나 선생님 (통합사회)", "원치승 선생님 (국어)"],
-        "2학년 교무실 (본관 2층)": ["이재현 선생님 (수학)", "최소연 선생님 (영어)", "이병철 선생님 (지리)", "신주하 선생님 (국어)", "김지은 선생님 (영어)", "민준한 선생님 (국어)", "김동주 선생님 (역사)", "이서영 선생님 (사회)", "신국용 선생님 (체육)", "선은호 선생님 (화학)"],
-        "3학년 교무실 (동국관 4층)": ["김건우 선생님 (국어)", "김영민 선생님 (사회)", "노여진 선생님 (국어)", "박기만 선생님 (윤리)", "이의진 선생님 (체육)", "이필권 선생님 (미술)", "이주영 선생님 (화학)", "홍지연 선생님 (영어)", "강만규 선생님 (물리학)", "최아현 선생님 (지구과학)", "채정태 선생님 (수학)"],
-        "본교무실 (본관 1층)": ["송자선 교감선생님", "윤용민 선생님 (지리)", "김용진 선생님 (국어)", "한은정 선생님 (윤리)", "장연지 선생님 (영어)", "조미화 선생님 (음악)", "윤방하 선생님 (영어)", "김은경 선생님", "김재곤 선생님 (지구과학)", "강효민 선생님 (수학)", "이난주 선생님 (생명과학)", "남현두 선생님 (수학)", "이재령 선생님 (국어)", "임영아 선생님 (영어)", "이민희 선생님 (사회)", "지연경 선생님", "강성권 선생님 (수학)", "최지원 선생님 (생명과학)", "황일수 선생님 (수학)", "허남은 선생님 (디지털 튜터)", "정연우 선생님 (영어)", "이동준 선생님 (수학)", "이지은 선생님 (국어)", "박문희 선생님 (한문)", "오종환 교장선생님"],
-        "학생부실 (동국관 2층)": ["김병무 선생님 (체육)", "성은비 선생님 (물리학)", "정하나 선생님 (음악)", "서기수 선생님 (체육)"],
-        "기타 특별실 (상담/진로/보건 등)": ["여운호 선생님 (상담 - 동국관 2층)", "황유현 선생님 (진로 - 본관 1층)", "지호영 선생님 (일본어 - 본관 1층)", "우수형 법사님 (종교 - 동국관 1층)", "정성준 선생님 (역사 - 동국관 1층)", "이혜정 선생님 (보건 - 본관 1층)", "박진희 선생님 (영양 - 급식실)", "최정이 선생님 (사서 - 도서관)"]
+        "1학년 교무실 (본관 3층)": ["김선생", "이선생", "박선생"],
+        "2학년 교무실 (본관 2층)": ["최선생", "정선생", "강선생"],
+        "3학년 교무실 (동국관 4층)": ["조선생", "윤선생", "장선생"],
+        "본교무실 (본관 1층)": ["교감선생님", "부장선생님", "한선생"],
+        "학생안전부실 (동국관 2층)": ["안전부장", "생활지도교사", "임선생"],
+        "기타 특별실 (상담/진로/보건 등)": ["상담선생님", "진로선생님", "보건선생님"]
     };
 
     const officeSelect = document.getElementById('officeLocation');
@@ -99,13 +87,11 @@
     officeSelect.addEventListener('change', function() {
         const selectedOffice = this.value;
         teacherSelect.innerHTML = '<option value="">-- 선생님을 선택하세요 --</option>';
-        
         if (selectedOffice && teachersByOffice[selectedOffice]) {
             teacherSelect.disabled = false;
-            teachersByOffice[selectedOffice].forEach(function(teacher) {
+            teachersByOffice[selectedOffice].forEach(teacher => {
                 const option = document.createElement('option');
-                option.value = teacher;
-                option.textContent = teacher;
+                option.value = teacher; option.textContent = teacher;
                 teacherSelect.appendChild(option);
             });
         } else {
@@ -116,33 +102,27 @@
 
     document.getElementById('callForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        const office = officeSelect.value;
-        const teacher = teacherSelect.value;
-        const studentInfo = document.getElementById('studentInfo').value;
-        const studentName = document.getElementById('studentName').value;
-        const reason = document.getElementById('reason').value;
-        const timestamp = new Date().toLocaleString("ko-KR");
-
-        const callsRef = ref(database, 'calls');
-        const newCallRef = push(callsRef);
-
-        set(newCallRef, {
-            officeLocation: office,
-            teacherName: teacher,
-            studentInfo: studentInfo,
-            studentName: studentName,
-            reason: reason,
-            timestamp: timestamp,
+        const now = new Date();
+        const timestampStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+        
+        const callData = {
+            studentInfo: document.getElementById('studentInfo').value,
+            studentName: document.getElementById('studentName').value,
+            officeLocation: officeSelect.value,
+            teacherName: teacherSelect.value,
+            reason: document.getElementById('reason').value,
+            timestamp: timestampStr,
             status: "대기"
-        })
-        .then(() => {
-            alert(`${teacher}님을 호출했습니다.\n잠시만 대기해 주세요!`);
+        };
+
+        const newCallRef = push(ref(database, 'calls'));
+        set(newCallRef, callData).then(() => {
+            alert("선생님 호출이 완료되었습니다. 교무실 앞에서 잠시 대기해 주세요!");
             document.getElementById('callForm').reset();
             teacherSelect.disabled = true;
             teacherSelect.innerHTML = '<option value="">-- 교무실을 먼저 선택하세요 --</option>';
-        })
-        .catch((error) => {
-            alert('호출 실패: ' + error.message);
+        }).catch((error) => {
+            alert("호출 실패: " + error.message);
         });
     });
 </script>
