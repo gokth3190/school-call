@@ -34,13 +34,6 @@
         </div>
         
         <div class="form-group">
-            <label for="officeLocation">교무실 위치</label>
-            <select id="officeLocation" required disabled>
-                <option value="3학년 교무실 (동국관 4층)" selected>3학년 교무실 (동국관 4층)</option>
-            </select>
-        </div>
-
-        <div class="form-group">
             <label for="teacherName">호출할 선생님</label>
             <select id="teacherName" required>
                 <option value="">-- 선생님을 선택하세요 --</option>
@@ -74,7 +67,7 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
 
-    // 3학년 교무실 명단만 남겨두었습니다.
+    // 3학년 선생님 명단
     const teachers = [
         "김건우 선생님 (국어)", "김영민 선생님 (사회)", "노여진 선생님 (국어)", 
         "박기만 선생님 (윤리)", "이의진 선생님 (체육)", "이필권 선생님 (미술)", 
@@ -82,10 +75,9 @@
         "최아현 선생님 (지구과학)", "채정태 선생님 (수학)"
     ];
 
-    const officeSelect = document.getElementById('officeLocation');
     const teacherSelect = document.getElementById('teacherName');
 
-    // 페이지가 로드되면 자동으로 3학년 선생님 목록을 채워넣습니다.
+    // 페이지 로드 시 3학년 선생님 목록 주입
     function loadTeachers() {
         teachers.forEach(function(teacher) {
             const option = document.createElement('option');
@@ -99,8 +91,6 @@
     document.getElementById('callForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // select 태그가 disabled 상태여도 값을 명확히 가져오도록 처리했습니다.
-        const office = officeSelect.value; 
         const teacher = teacherSelect.value;
         const studentInfo = document.getElementById('studentInfo').value;
         const studentName = document.getElementById('studentName').value;
@@ -110,8 +100,9 @@
         const callsRef = ref(database, 'calls');
         const newCallRef = push(callsRef);
 
+        // 💡 officeLocation 항목은 보이지 않지만 데이터에는 '3학년 교무실 (동국관 4층)'로 자동 저장됩니다.
         set(newCallRef, {
-            officeLocation: office,
+            officeLocation: "3학년 교무실 (동국관 4층)",
             teacherName: teacher,
             studentInfo: studentInfo,
             studentName: studentName,
@@ -123,8 +114,7 @@
             alert(`${teacher}님을 호출했습니다.\n잠시만 대기해 주세요!`);
             document.getElementById('callForm').reset();
             
-            // 리셋 후에도 3학년 교무실 선택 상태 및 선생님 목록 유지
-            officeSelect.value = "3학년 교무실 (동국관 4층)";
+            // 리셋 후 선생님 목록 다시 채우기
             teacherSelect.innerHTML = '<option value="">-- 선생님을 선택하세요 --</option>';
             loadTeachers();
         })
